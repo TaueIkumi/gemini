@@ -62,8 +62,8 @@ def inpaint_image(foreground, background, mask):
     return inpainted_image
 
 if __name__ == '__main__':
-    img1 = cv2.imread("img/castle2.jpg")
-    img2 = cv2.imread("img/castle1.jpg")
+    img1 = cv2.imread("img/street1.jpg")
+    img2 = cv2.imread("img/street2.jpg")
 
     human_mask1 = create_human_mask(img1)
     human_mask2 = create_human_mask(img2)
@@ -84,8 +84,3 @@ if __name__ == '__main__':
         cv2.imwrite("inpainted_img1.jpg", inpainted_img1)
         cv2.imwrite("inpainted_img2.jpg", inpainted_img2)
 
-        # 結果を表示
-        cv2.imshow("Inpainted Image 1", inpainted_img1)
-        cv2.imshow("Inpainted Image 2", inpainted_img2)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
