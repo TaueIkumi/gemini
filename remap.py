@@ -61,7 +61,8 @@ def inpaint_image(foreground, background, mask):
     inpainted_image = np.where(mask[:, :, None] == 255, background, foreground)
     return inpainted_image
 
-if __name__ == '__main__':
+
+def main():
     img1 = cv2.imread("img/street1.jpg")
     img2 = cv2.imread("img/street2.jpg")
 
@@ -79,8 +80,9 @@ if __name__ == '__main__':
         # 2枚目の人間部分を1枚目の背景で補填
         aligned_img1 = align_images(img2, img1, pt2, pt1)
         inpainted_img2 = inpaint_image(img2, aligned_img1, human_mask2)
+        # cv2.imwrite("inpainted_img1.jpg", inpainted_img1)
+        # cv2.imwrite("inpainted_img2.jpg", inpainted_img2)
+    return inpainted_img1, inpainted_img2
 
-        # 結果を保存
-        cv2.imwrite("inpainted_img1.jpg", inpainted_img1)
-        cv2.imwrite("inpainted_img2.jpg", inpainted_img2)
-
+if __name__ == "__main__":
+    main()
