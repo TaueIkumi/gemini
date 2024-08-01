@@ -57,14 +57,15 @@ def align_images(img1, img2, apt1, apt2):
     return aligned_img2
 
 def inpaint_image(foreground, background, mask):
-    # 1枚目の人間部分を2枚目の同じ座標の背景で補填する
     inpainted_image = np.where(mask[:, :, None] == 255, background, foreground)
     return inpainted_image
 
+def calculate_difference(img1, img2):
+    difference = np.sum(np.abs(img1.astype(int) - img2.astype(int)))
+    return difference
 
-def main():
-    img1 = cv2.imread("img/street1.jpg")
-    img2 = cv2.imread("img/street2.jpg")
+
+def main(img1, img2):
 
     human_mask1 = create_human_mask(img1)
     human_mask2 = create_human_mask(img2)
@@ -80,9 +81,18 @@ def main():
         # 2枚目の人間部分を1枚目の背景で補填
         aligned_img1 = align_images(img2, img1, pt2, pt1)
         inpainted_img2 = inpaint_image(img2, aligned_img1, human_mask2)
-        # cv2.imwrite("inpainted_img1.jpg", inpainted_img1)
-        # cv2.imwrite("inpainted_img2.jpg", inpainted_img2)
-    return inpainted_img1, inpainted_img2
+
+        diff1 = calculate_difference(img1, inpainted_img1)
+        diff2 = calculate_difference(img2, inpainted_img2)
+        
+        if diff1 < diff2:
+            cv2.imwrite("best_inpainted_image.jpg", inpainted_img1)
+            return inpainted_img1
+        else:
+            cv2.imwrite("best_inpainted_image.jpg", inpainted_img2)
+            return inpainted_img2
 
 if __name__ == "__main__":
-    main()
+    img1 = cv2.imread("img/castle1.jpg")
+    img2 = cv2.imread("img/castle2.jpg")
+    main(img1, img2)

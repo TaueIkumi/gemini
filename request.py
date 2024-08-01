@@ -1,18 +1,19 @@
 import requests
 
-url = "http://127.0.0.1:8000/upload/"  # FastAPIサーバーのURL
+url = "http://127.0.0.1:8000/lpips/"  # FastAPIサーバーのURL
 
 # 送信する画像ファイルのパス
-file1_path = "img/osho1.jpg"
-file2_path = "img/osho2.jpg"
+game_master_path = "img/daigaku4.jpg"
+player1_path = "img/daigaku5.jpg"
+player2_path = "img/daigaku6.jpg"
 
 # 画像ファイルを開いてmultipart/form-dataで送信
-with open(file1_path, "rb") as file1, open(file2_path, "rb") as file2:
+with open(game_master_path, "rb") as game_master, open(player1_path, "rb") as player1, open(player2_path, "rb") as player2:
     files = {
-        "file1": file1,
-        "file2": file2
+        "gamemaster": game_master,
+        "player1": player1,
+        "player2": player2
     }
     response = requests.post(url, files=files)
 
-# レスポンスを表示
-print(response.json())
+print(response.text)
