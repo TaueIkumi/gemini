@@ -3,7 +3,7 @@ import requests
 url = "http://127.0.0.1:8000/lpips/"  # FastAPIサーバーのURL
 
 # 送信する画像ファイルのパス
-game_master_path = "img/daigaku4.jpg"
+game_master_path = "img/daigaku1.jpg"
 player1_path = "img/castle1.jpg"
 player2_path = "img/castle2.jpg"
 
