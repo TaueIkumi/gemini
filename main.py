@@ -62,6 +62,7 @@ async def lpips_images_from_url(gamemaster_url: str, player1_url: str, player2_u
         # Process images
         player_remapped_img = remap.main(player_img1, player_img2)
         result = lpips_py.lpips_function(player_remapped_img, game_master_img)
+        result = round(result, 2)
         return {"score": result}
 
     except Exception as e:
