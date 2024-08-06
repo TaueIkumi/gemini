@@ -2,14 +2,18 @@ from fastapi import FastAPI, File, UploadFile
 import cv2
 import numpy as np
 import requests
-from io import BytesIO
 import lpips_py
 import remap
 
 app = FastAPI()
 
+
 @app.post("/lpips/")
-async def lpips_images(gamemaster: UploadFile = File(...), player1: UploadFile = File(...), player2: UploadFile = File(...)):    
+async def lpips_images(
+    gamemaster: UploadFile = File(...),
+    player1: UploadFile = File(...),
+    player2: UploadFile = File(...),
+):
     player_img1 = await player1.read()
     player_img2 = await player2.read()
     game_master_img = await gamemaster.read()
@@ -32,8 +36,11 @@ async def lpips_images(gamemaster: UploadFile = File(...), player1: UploadFile =
     result = lpips_py.lpips_function(player_remapped_img, game_master_img)
     return {"score": result}
 
+
 @app.get("/lpips/url/")
-async def lpips_images_from_url(gamemaster_url: str, player1_url: str, player2_url: str):
+async def lpips_images_from_url(
+    gamemaster_url: str, player1_url: str, player2_url: str
+):
     try:
         # Download images from URLs
         game_master_img = requests.get(gamemaster_url).content
@@ -67,6 +74,7 @@ async def lpips_images_from_url(gamemaster_url: str, player1_url: str, player2_u
 
     except Exception as e:
         return {"error": str(e)}
+
 
 @app.get("/")
 def read_root():
