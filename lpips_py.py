@@ -1,14 +1,11 @@
-import cv2
 import lpips
-import torch
-import matplotlib.pyplot as plt
 import torchvision.models as models
 import torchvision.transforms.functional as TF
-from PIL import Image
 
 # Initialize LPIPS model
-loss_fn_alex = lpips.LPIPS(net='alex')
+loss_fn_alex = lpips.LPIPS(net="alex")
 model = models.alexnet(weights=models.AlexNet_Weights.IMAGENET1K_V1)
+
 
 def lpips_function(img1, img2):
     # Preprocess images: convert to tensor and scale to [-1, 1]

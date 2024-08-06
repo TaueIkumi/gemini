@@ -2,7 +2,8 @@ import cv2
 import numpy as np
 from ultralytics import YOLO
 
-model = YOLO('yolov9c.pt')
+model = YOLO("yolov9c.pt")
+
 
 def create_human_mask(image):
     results = model(image)
@@ -16,6 +17,7 @@ def create_human_mask(image):
                 mask[y1:y2, x1:x2] = 255
 
     return mask
+
 
 def get_matcher(img1, img2):
     gray1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
@@ -50,15 +52,18 @@ def get_matcher(img1, img2):
 
     return apt1, apt2
 
+
 def align_images(img1, img2, apt1, apt2):
     h, w = img1.shape[:2]
     homography, _ = cv2.findHomography(apt2, apt1, cv2.RANSAC)
     aligned_img2 = cv2.warpPerspective(img2, homography, (w, h))
     return aligned_img2
 
+
 def inpaint_image(foreground, background, mask):
     inpainted_image = np.where(mask[:, :, None] == 255, background, foreground)
     return inpainted_image
+
 
 def calculate_difference(img1, img2):
     difference = np.sum(np.abs(img1.astype(int) - img2.astype(int)))
@@ -84,13 +89,14 @@ def main(img1, img2):
 
         diff1 = calculate_difference(img1, inpainted_img1)
         diff2 = calculate_difference(img2, inpainted_img2)
-        
+
         if diff1 < diff2:
             # cv2.imwrite("best_inpainted_image.jpg", inpainted_img1)
             return inpainted_img1
         else:
             # cv2.imwrite("best_inpainted_image.jpg", inpainted_img2)
             return inpainted_img2
+
 
 if __name__ == "__main__":
     img1 = cv2.imread("img/castle1.jpg")
