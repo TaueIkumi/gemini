@@ -2,7 +2,6 @@ from fastapi import FastAPI, File, UploadFile
 import cv2
 import numpy as np
 import requests
-from io import BytesIO
 import lpips_py
 import remap
 
