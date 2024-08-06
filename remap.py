@@ -86,10 +86,10 @@ def main(img1, img2):
         diff2 = calculate_difference(img2, inpainted_img2)
         
         if diff1 < diff2:
-            cv2.imwrite("best_inpainted_image.jpg", inpainted_img1)
+            # cv2.imwrite("best_inpainted_image.jpg", inpainted_img1)
             return inpainted_img1
         else:
-            cv2.imwrite("best_inpainted_image.jpg", inpainted_img2)
+            # cv2.imwrite("best_inpainted_image.jpg", inpainted_img2)
             return inpainted_img2
 
 if __name__ == "__main__":
