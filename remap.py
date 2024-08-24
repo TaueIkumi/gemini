@@ -62,12 +62,12 @@ def get_matcher(img1, img2):
 def align_images(img1, img2, apt1, apt2):
     h, w = img1.shape[:2]
     if len(apt1) < 4 or len(apt2) < 4:
-        print("Not enough points to compute homography.")
+        print("Not enough points to compute homography. return img1")
         return img1
     homography, _ = cv2.findHomography(apt2, apt1, cv2.RANSAC)
     if homography is None:
         print("Homography could not be computed.")
-        return None
+        return img1
     aligned_img2 = cv2.warpPerspective(img2, homography, (w, h))
     return aligned_img2
 
