@@ -27,8 +27,13 @@ def get_matcher(img1, img2):
     kp1, des1 = sift.detectAndCompute(gray1, None)
     kp2, des2 = sift.detectAndCompute(gray2, None)
 
+    if des1 is None or des2 is None:
+        print("Descriptors could not be computed.")
+        return None, None
+    
     if len(kp1) == 0 or len(kp2) == 0:
-        return None
+        print("No keypoints found in one of the images.")
+        return None, None
 
     bf = cv2.BFMatcher()
     matches = bf.knnMatch(des1, des2, k=2)
@@ -39,7 +44,8 @@ def get_matcher(img1, img2):
             good.append(m)
 
     if len(good) == 0:
-        return None
+        print("No good matches found.")
+        return None, None
 
     target_position = []
     base_position = []
@@ -56,6 +62,9 @@ def get_matcher(img1, img2):
 def align_images(img1, img2, apt1, apt2):
     h, w = img1.shape[:2]
     homography, _ = cv2.findHomography(apt2, apt1, cv2.RANSAC)
+    if homography is None:
+        print("Homography could not be computed.")
+        return None
     aligned_img2 = cv2.warpPerspective(img2, homography, (w, h))
     return aligned_img2
 
@@ -71,34 +80,46 @@ def calculate_difference(img1, img2):
 
 
 def main(img1, img2):
-
     human_mask1 = create_human_mask(img1)
     human_mask2 = create_human_mask(img2)
 
     pt1, pt2 = get_matcher(img1, img2)
 
-    if pt1 is not None and pt2 is not None:
-        aligned_img2 = align_images(img1, img2, pt1, pt2)
+    if pt1 is None or pt2 is None:
+        print("Matching points could not be computed.")
+        return img1  # or handle it differently, e.g., return a default image
 
-        # 1枚目の人間部分を2枚目の背景で補填
-        inpainted_img1 = inpaint_image(img1, aligned_img2, human_mask1)
+    aligned_img2 = align_images(img1, img2, pt1, pt2)
 
-        # 2枚目の人間部分を1枚目の背景で補填
-        aligned_img1 = align_images(img2, img1, pt2, pt1)
-        inpainted_img2 = inpaint_image(img2, aligned_img1, human_mask2)
+    if aligned_img2 is None:
+        print("Image alignment failed.")
+        return img1
 
-        diff1 = calculate_difference(img1, inpainted_img1)
-        diff2 = calculate_difference(img2, inpainted_img2)
+    inpainted_img1 = inpaint_image(img1, aligned_img2, human_mask1)
 
-        if diff1 < diff2:
-            # cv2.imwrite("best_inpainted_image.jpg", inpainted_img1)
-            return inpainted_img1
-        else:
-            # cv2.imwrite("best_inpainted_image.jpg", inpainted_img2)
-            return inpainted_img2
+    aligned_img1 = align_images(img2, img1, pt2, pt1)
+    if aligned_img1 is None:
+        print("Image alignment failed.")
+        return img2
+
+    inpainted_img2 = inpaint_image(img2, aligned_img1, human_mask2)
+
+    diff1 = calculate_difference(img1, inpainted_img1)
+    diff2 = calculate_difference(img2, inpainted_img2)
+
+    if diff1 < diff2:
+        return inpainted_img1
+    else:
+        return inpainted_img2
 
 
 if __name__ == "__main__":
     img1 = cv2.imread("img/castle1.jpg")
     img2 = cv2.imread("img/castle2.jpg")
-    main(img1, img2)
+    result = main(img1, img2)
+    if isinstance(result, np.ndarray):
+        cv2.imshow("Result", result)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+    else:
+        print("Error occurred while processing images.")
