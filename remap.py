@@ -86,7 +86,7 @@ def main(img1, img2):
     pt1, pt2 = get_matcher(img1, img2)
 
     if pt1 is None or pt2 is None:
-        print("Matching points could not be computed.")
+        print("Matching points could not be computed. return img1")
         return img1  # or handle it differently, e.g., return a default image
 
     aligned_img2 = align_images(img1, img2, pt1, pt2)
