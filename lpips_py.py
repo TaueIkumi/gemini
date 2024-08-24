@@ -1,4 +1,5 @@
 import lpips
+import numpy as np
 import torchvision.models as models
 import torchvision.transforms.functional as TF
 
@@ -21,5 +22,5 @@ def lpips_function(img1, img2):
     # Convert LPIPS distance to percentage similarity (lower distance means higher similarity)
     lpips_score = d.item()
     lpips_percentage = (1 - lpips_score) * 100
-
-    return lpips_percentage
+    
+    return np.clip(lpips_percentage, 0, 100)
