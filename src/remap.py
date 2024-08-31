@@ -95,7 +95,6 @@ def main(img1, img2):
 
     aligned_img2 = align_images(img1, img2, pt1, pt2)
 
-
     if aligned_img2 is None:
         print("Image alignment failed.")
         return img1
