@@ -1,6 +1,13 @@
 # gemini
 
-```shell
-uvicorn main:app --reload
-python request.py
+## Dev
+
+```sh
+docker compose up --build
+```
+
+## Build
+
+```sh
+docker build --platform=linux/amd64 -t gemini .
 ```

@@ -4,7 +4,6 @@ from ultralytics import YOLO
 
 model = YOLO("yolov9c.pt")
 
-
 def create_human_mask(image):
     results = model(image)
     mask = np.zeros(image.shape[:2], dtype=np.uint8)
@@ -30,7 +29,7 @@ def get_matcher(img1, img2):
     if des1 is None or des2 is None:
         print("Descriptors could not be computed.")
         return None, None
-    
+
     if len(kp1) == 0 or len(kp2) == 0:
         print("No keypoints found in one of the images.")
         return None, None

@@ -22,5 +22,5 @@ def lpips_function(img1, img2):
     # Convert LPIPS distance to percentage similarity (lower distance means higher similarity)
     lpips_score = d.item()
     lpips_percentage = (1 - lpips_score) * 100
-    
+
     return np.clip(lpips_percentage, 0, 100)

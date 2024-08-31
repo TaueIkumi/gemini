@@ -1,0 +1,14 @@
+services:
+  gemini:
+    environment:
+      - TZ=Asia/Tokyo
+      - TORCH_HOME=/app/model/
+    build:
+      context: .
+      target: base
+    container_name: gemini
+    command: uvicorn src.main:app --host=0.0.0.0 --reload
+    ports:
+      - 8000:8000
+    volumes:
+      - ./model:/app/model
