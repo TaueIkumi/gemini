@@ -2,8 +2,8 @@ from fastapi import FastAPI, File, UploadFile
 import cv2
 import numpy as np
 import requests
-import lpips_py
-import remap
+from . import lpips_py
+from . import remap
 
 app = FastAPI()
 
@@ -69,7 +69,7 @@ async def lpips_images_from_url(
     player_remapped_img = remap.main(player_img1, player_img2)
     if player_remapped_img is None:
         return {"error": "Remapping failed"}
-    
+
     result = lpips_py.lpips_function(player_remapped_img, game_master_img)
     if result is None:
         return {"error": "LPIPS computation failed"}
