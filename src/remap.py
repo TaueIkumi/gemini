@@ -36,7 +36,9 @@ def get_matcher(img1, img2):
 
     bf = cv2.BFMatcher()
     matches = bf.knnMatch(des1, des2, k=2)
-
+    if len(matches) < 2:
+        print("Not enough matches found.")
+        return None, None
     good = []
     for m, n in matches:
         if m.distance < 0.7 * n.distance:
@@ -92,6 +94,7 @@ def main(img1, img2):
         return img1  # return img1
 
     aligned_img2 = align_images(img1, img2, pt1, pt2)
+
 
     if aligned_img2 is None:
         print("Image alignment failed.")
